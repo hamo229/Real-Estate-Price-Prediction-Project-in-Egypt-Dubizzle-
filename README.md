@@ -1,1 +1,67 @@
-🏠 Real Estate Price Prediction Project in Egypt (Dubizzle Properties)🌟 Project OverviewThis project focuses on building a high-accuracy Machine Learning Regression Model to predict residential unit prices within the Egyptian real estate market, utilizing data aggregated from an online property classifieds platform.Core Objective: To identify the primary factors driving real estate prices and develop a robust predictive model.Tools and Libraries: Python (Pandas, NumPy, Matplotlib/Seaborn, Scikit-learn, XGBoost).Model Status: Achieved moderate accuracy (R² around 51% before tuning), indicating the need for additional features and data volume to reach professional accuracy standards (80%+).💾 The DatasetThe dataset was compiled from property listings and initially contained 4500 rows (prior to cleaning).Feature NameDescriptionExample ValuetitleListing Title"Apartment 3 rooms immediate delivery..."priceUnit Price (The Target variable)4,492,000 EGPareaUnit Area (Square Meters)151 sqmbedsNumber of Bedrooms3bathsNumber of Bathrooms3compound / locationCompound or Area NameTagamoa 1 / Diar 1🧹 Data Preprocessing and Feature EngineeringTo ensure optimal model performance, several critical steps were executed:Data Cleaning: Removal of non-numeric characters (EGP, sqm) and type conversion for numerical columns.Outliers Removal: The Interquartile Range (IQR) method was used to remove extreme outliers from price, area, baths, and beds.Categorical Feature Handling (Target Encoding):Instead of standard One-Hot Encoding (which yielded low R²), Target Encoding was applied to the compound feature.A new feature, Compound_Value (the mean price of properties in that compound), was created. This proved to be the single most powerful predictor.🤖 Modeling and EvaluationMultiple regression models were tested to evaluate performance:ModelInitial R² ScoreFinal R² Score (Post-Target Encoding)Linear Regression (MLR)0.27N/ARandom Forest Regression0.310.51 (Best Performer)XGBoost Regressor0.45Lower than RF🎯 Key Findings and Feature ImportanceThe model successfully validated market intuition by identifying the most significant drivers of price:FeatureImportance ScoreConclusionCompound_Value66.7%Dominant Factor: The location's average value is the strongest predictor.area24.4%Secondary Factor: Unit size is highly relevant after controlling for location.baths / beds< 6%These features contribute marginally to the final price prediction.📈 Challenges and Future WorkTo achieve the target professional accuracy ($R^2 > 0.80$):Data Augmentation: Collect a significantly larger dataset (> 10,000 rows) to stabilize the model and improve the accuracy of Target Encoding.Missing Features: Incorporate critical data points currently missing, such as Finishing Quality, Floor Number, and Delivery Status.Hyperparameter Tuning: Systematically tune the Random Forest model parameters (e.g., using RandomizedSearchCV) to extract the maximum possible performance from the existing data.
+# 🏠 مشروع تحليل وتوقع أسعار العقارات في مصر (Dubizzle Properties)
+
+## 🌟 نظرة عامة على المشروع (Project Overview)
+
+يهدف هذا المشروع إلى بناء نموذج تعلم آلي (**Machine Learning Model**) عالي الدقة للتنبؤ بأسعار الوحدات السكنية في السوق المصري، اعتماداً على بيانات مجمعة من منصة الإعلانات العقارية.
+
+* **الهدف الأساسي:** تحديد العوامل الرئيسية التي تحرك أسعار العقارات وبناء نموذج **انحدار (Regression)** موثوق به.
+* **اللغة والأدوات:** Python (Pandas, NumPy, Matplotlib/Seaborn, Scikit-learn, XGBoost).
+* **حالة النموذج الحالية:** تم تحقيق دقة **متوسطة** ($R^2$ حوالي 51% بعد معالجة الميزات)، مما يشير إلى أن العامل الحاسم لرفع الدقة هو **زيادة حجم البيانات** و**إضافة ميزات مفقودة**.
+
+---
+
+## 💾 مجموعة البيانات والميزات (Dataset and Features)
+
+تم تجميع البيانات من إعلانات عقارية، وتحتوي على **4500 صف** (قبل التنظيف).
+
+| العمود الإنجليزي (Feature) | الوصف العربي | أمثلة |
+| :--- | :--- | :--- |
+| `price` | سعر الوحدة (المتغير **الهدف**) | 4,492,000 ج.م |
+| `area` | مساحة الوحدة (متر مربع) | 151 متر مربع |
+| `beds` | عدد غرف النوم | 3 |
+| `baths` | عدد الحمامات | 3 |
+| `compound` / `location` | اسم الكمبوند أو المنطقة | التجمع الأول / ديار1 |
+
+---
+
+## 🧹 منهجية تحليل وتجهيز البيانات (Data Preprocessing)
+
+لضمان أعلى دقة، تم تطبيق منهجية متقدمة في هندسة الميزات (**Feature Engineering**):
+
+1.  **التنظيف الأولي:** إزالة الرموز وتحويل الأعمدة إلى نوع `Numeric`.
+2.  **إزالة القيم المتطرفة (Outliers):** استخدام طريقة **المدى الربيعي (IQR)** لتنظيف جميع المتغيرات الرقمية (`price`, `area`, `baths`, `beds`).
+3.  **معالجة الموقع المتقدمة (Target Encoding):**
+    * تم استبدال ميزة **الكمبوند** الفئوية بميزة رقمية جديدة: **`Compound_Value`**.
+    * هذه الميزة تمثل **متوسط سعر العقار داخل كل كمبوند**، مما جعلها أقوى محرك للتنبؤ.
+
+---
+
+## 🤖 نتائج النمذجة وأداء الخوارزميات (Modeling and Performance)
+
+تم اختبار ثلاثة نماذج انحدار رئيسية:
+
+| النموذج (Model) | القيمة النهائية لـ $R^2$ | ملاحظات |
+| :--- | :--- | :--- |
+| **Linear Regression** | 0.27 | أداء ضعيف (لأن العلاقات غير خطية). |
+| **Random Forest Regression** | **0.51** | الأفضل أداءً والأكثر استقراراً على هذه البيانات. |
+| **XGBoost Regressor** | 0.45 | أقل استقراراً في هذه الحالة وقد يتطلب ضبطاً مكثفاً. |
+
+### تحليل أهمية الميزات (Feature Importance)
+
+أظهر النموذج بوضوح أن العاملين الرئيسيين للسعر هما:
+
+| الميزة (Feature) | الأهمية (Importance) | الاستنتاج |
+| :--- | :--- | :--- |
+| **`Compound_Value`** | **66.7%** | **الأهم بلا منازع:** يثبت أن قوة الموقع هي مفتاح التسعير. |
+| **`area`** | **24.4%** | **الثاني:** عامل حاسم بعد تحديد قيمة الموقع. |
+| `baths` / `beds` | < 6% | عوامل ذات تأثير هامشي. |
+
+---
+
+## 🚀 خطة العمل المستقبلية للوصول إلى $R^2 > 0.80$
+
+لرفع دقة النموذج إلى المستوى الاحترافي، يجب التركيز على:
+
+* **جمع المزيد من البيانات:** زيادة عدد الصفوف إلى **10,000 صف أو أكثر** لتغذية النموذج بشكل أفضل.
+* **إضافة ميزات مفقودة:** إدخال عوامل غير موجودة حالياً مثل **جودة التشطيب**، **رقم الطابق**، و **حالة التسليم** (فوري/قيد الإنشاء).
+* **ضبط المعاملات (Hyperparameter Tuning):** استخدام تقنيات متقدمة مثل **Randomized Search** لتحسين أداء **Random Forest** بشكل أكبر.
