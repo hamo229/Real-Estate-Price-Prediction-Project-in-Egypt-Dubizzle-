@@ -1,67 +1,69 @@
-# 🏠 مشروع تحليل وتوقع أسعار العقارات في مصر (Dubizzle Properties)
+# 🏠 Real Estate Price Analysis & Prediction in Egypt (Dubizzle Properties)
 
-## 🌟 نظرة عامة على المشروع (Project Overview)
+## 🌟 Project Overview
 
-يهدف هذا المشروع إلى بناء نموذج تعلم آلي (**Machine Learning Model**) عالي الدقة للتنبؤ بأسعار الوحدات السكنية في السوق المصري، اعتماداً على بيانات مجمعة من منصة الإعلانات العقارية.
+This project aims to build a high-accuracy **Machine Learning model** to predict residential property prices in the Egyptian market, using data collected from real-estate listing platforms.
 
-* **الهدف الأساسي:** تحديد العوامل الرئيسية التي تحرك أسعار العقارات وبناء نموذج **انحدار (Regression)** موثوق به.
-* **اللغة والأدوات:** Python (Pandas, NumPy, Matplotlib/Seaborn, Scikit-learn, XGBoost).
-* **حالة النموذج الحالية:** تم تحقيق دقة **متوسطة** ($R^2$ حوالي 51% بعد معالجة الميزات)، مما يشير إلى أن العامل الحاسم لرفع الدقة هو **زيادة حجم البيانات** و**إضافة ميزات مفقودة**.
-
----
-
-## 💾 مجموعة البيانات والميزات (Dataset and Features)
-
-تم تجميع البيانات من إعلانات عقارية، وتحتوي على **4500 صف** (قبل التنظيف).
-
-| العمود الإنجليزي (Feature) | الوصف العربي | أمثلة |
-| :--- | :--- | :--- |
-| `price` | سعر الوحدة (المتغير **الهدف**) | 4,492,000 ج.م |
-| `area` | مساحة الوحدة (متر مربع) | 151 متر مربع |
-| `beds` | عدد غرف النوم | 3 |
-| `baths` | عدد الحمامات | 3 |
-| `compound` / `location` | اسم الكمبوند أو المنطقة | التجمع الأول / ديار1 |
+* **Main Objective:** Identify the key factors influencing property prices and build a reliable **Regression model**.  
+* **Languages & Tools:** Python (Pandas, NumPy, Matplotlib/Seaborn, Scikit-learn, XGBoost).  
+* **Current Model Status:** Achieved **moderate accuracy** (**R² ≈ 0.51** after feature engineering), indicating that the most critical improvements depend on **increasing dataset size** and **adding missing features**.
 
 ---
 
-## 🧹 منهجية تحليل وتجهيز البيانات (Data Preprocessing)
+## 💾 Dataset and Features
 
-لضمان أعلى دقة، تم تطبيق منهجية متقدمة في هندسة الميزات (**Feature Engineering**):
+The dataset was collected from real-estate listings and contains **4,500 rows** (before cleaning).
 
-1.  **التنظيف الأولي:** إزالة الرموز وتحويل الأعمدة إلى نوع `Numeric`.
-2.  **إزالة القيم المتطرفة (Outliers):** استخدام طريقة **المدى الربيعي (IQR)** لتنظيف جميع المتغيرات الرقمية (`price`, `area`, `baths`, `beds`).
-3.  **معالجة الموقع المتقدمة (Target Encoding):**
-    * تم استبدال ميزة **الكمبوند** الفئوية بميزة رقمية جديدة: **`Compound_Value`**.
-    * هذه الميزة تمثل **متوسط سعر العقار داخل كل كمبوند**، مما جعلها أقوى محرك للتنبؤ.
-
----
-
-## 🤖 نتائج النمذجة وأداء الخوارزميات (Modeling and Performance)
-
-تم اختبار ثلاثة نماذج انحدار رئيسية:
-
-| النموذج (Model) | القيمة النهائية لـ $R^2$ | ملاحظات |
-| :--- | :--- | :--- |
-| **Linear Regression** | 0.27 | أداء ضعيف (لأن العلاقات غير خطية). |
-| **Random Forest Regression** | **0.51** | الأفضل أداءً والأكثر استقراراً على هذه البيانات. |
-| **XGBoost Regressor** | 0.45 | أقل استقراراً في هذه الحالة وقد يتطلب ضبطاً مكثفاً. |
-
-### تحليل أهمية الميزات (Feature Importance)
-
-أظهر النموذج بوضوح أن العاملين الرئيسيين للسعر هما:
-
-| الميزة (Feature) | الأهمية (Importance) | الاستنتاج |
-| :--- | :--- | :--- |
-| **`Compound_Value`** | **66.7%** | **الأهم بلا منازع:** يثبت أن قوة الموقع هي مفتاح التسعير. |
-| **`area`** | **24.4%** | **الثاني:** عامل حاسم بعد تحديد قيمة الموقع. |
-| `baths` / `beds` | < 6% | عوامل ذات تأثير هامشي. |
+| Feature (English) | Description | Example |
+|-------------------|-------------|---------|
+| `price` | Property price (the **target** variable) | 4,492,000 EGP |
+| `area` | Property area (m²) | 151 m² |
+| `beds` | Number of bedrooms | 3 |
+| `baths` | Number of bathrooms | 3 |
+| `compound` / `location` | Compound or neighborhood name | First Settlement / Diar1 |
 
 ---
 
-## 🚀 خطة العمل المستقبلية للوصول إلى $R^2 > 0.80$
+## 🧹 Data Preprocessing Methodology
 
-لرفع دقة النموذج إلى المستوى الاحترافي، يجب التركيز على:
+Several advanced data cleaning and feature engineering steps were applied to improve model stability:
 
-* **جمع المزيد من البيانات:** زيادة عدد الصفوف إلى **10,000 صف أو أكثر** لتغذية النموذج بشكل أفضل.
-* **إضافة ميزات مفقودة:** إدخال عوامل غير موجودة حالياً مثل **جودة التشطيب**، **رقم الطابق**، و **حالة التسليم** (فوري/قيد الإنشاء).
-* **ضبط المعاملات (Hyperparameter Tuning):** استخدام تقنيات متقدمة مثل **Randomized Search** لتحسين أداء **Random Forest** بشكل أكبر.
+1. **Initial Cleaning:** Removed symbols, normalized values, and converted numeric columns using `Numeric` types.  
+2. **Outlier Removal (IQR):** Applied to all numerical features (`price`, `area`, `baths`, `beds`).  
+3. **Advanced Location Encoding (Target Encoding):**  
+   * The categorical `compound` feature was replaced with a new numeric feature: **`Compound_Value`**.  
+   * This represents the **average property price per compound**, making it the strongest predictor.
+
+---
+
+## 🤖 Modeling and Performance
+
+Three regression models were tested:
+
+| Model | R² Score | Notes |
+|-------|----------|-------|
+| **Linear Regression** | 0.27 | Weak performance (relationships are not linear). |
+| **Random Forest Regression** | **0.51** | Best-performing and most stable. |
+| **XGBoost Regressor** | 0.45 | Less stable and requires tuning. |
+
+### Feature Importance Analysis
+
+The model clearly shows the top factors affecting price:
+
+| Feature | Importance | Conclusion |
+|---------|------------|------------|
+| **`Compound_Value`** | **66.7%** | Strongest driver — location dominates pricing. |
+| **`area`** | **24.4%** | Second most important feature. |
+| `baths` / `beds` | < 6% | Minor impact. |
+
+---
+
+## 🚀 Future Work (Target: R² > 0.80)
+
+To reach a professional accuracy level:
+
+* **Increase the dataset size:** Expand to **10,000+ rows** for better generalization.  
+* **Add missing critical features:** Such as finishing quality, floor number, delivery status (ready / under construction).  
+* **Hyperparameter Tuning:** Use advanced techniques such as **Randomized Search** to improve Random Forest performance.
+
+---
